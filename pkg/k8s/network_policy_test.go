@@ -126,7 +126,8 @@ func (s *K8sSuite) TestParseNetworkPolicy(c *C) {
 				Ingress: true,
 			},
 		},
-		Egress: policy.L4PolicyMap{},
+		Egress:            policy.L4PolicyMap{},
+		IngressVisibility: policy.L7VisibilityMap{},
 	})
 
 	ctx.To = labels.LabelArray{

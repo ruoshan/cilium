@@ -114,7 +114,8 @@ func (s *K8sSuite) TestParseNetworkPolicyDeprecated(c *C) {
 				Ingress: true,
 			},
 		},
-		Egress: policy.L4PolicyMap{},
+		Egress:            policy.L4PolicyMap{},
+		IngressVisibility: policy.L7VisibilityMap{},
 	})
 
 	ctx.To = labels.LabelArray{
