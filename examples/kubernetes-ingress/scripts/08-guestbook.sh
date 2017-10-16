@@ -1,10 +1,17 @@
 #!/usr/bin/env bash
+#
+# Creates guestbook example and waits for it to be ready to use.
+#######################################
+
+echo "Installing guestbook into kubectl cluster..."
 
 dir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 source "${dir}/helpers.bash"
 
 set -e
+
+kubectl create -f "${dir}/../network-policy/" || true
 
 kubectl create -f "${dir}/../deployments/guestbook/"
 
@@ -21,4 +28,4 @@ while [[ "$(kubectl get pods --output=jsonpath='{range .items[*]}{.metadata.name
     sleep 2s
 done
 
-kubectl create -f "${dir}/../deployments/guestbook/ingress/"
+echo "Installing guestbook into kubectl cluster... DONE!"
