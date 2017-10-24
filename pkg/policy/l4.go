@@ -27,13 +27,13 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-const (
-	// WildcardEndpointSelector is a special hash value for the wildcard endpoint, i.e., applies to all
-	WildcardEndpointSelector = iota
-)
+// WildcardEndpointSelector is the string representation of the wildcard endpoint, i.e., applies to all.
+// Constant.
+var WildcardEndpointSelector = api.NewESFromLabels().String()
 
-// L7DataMap contains a map of L7 rules per endpoint where key is a hash of EndpointSelector
-type L7DataMap map[uint64]api.L7Rules
+// L7DataMap contains a map of L7 rules per endpoint where key is a string representation of EndpointSelector
+// TODO: Add the EndpointSelector into each map value.
+type L7DataMap map[string]api.L7Rules
 
 type L4Filter struct {
 	// Port is the destination port to allow
@@ -61,13 +61,10 @@ func (dm L7DataMap) addRulesForEndpoints(rules api.L7Rules,
 	}
 	if len(fromEndpoints) > 0 {
 		for _, ep := range fromEndpoints {
-			hash, err := ep.Hash()
-			if err != nil || hash == 0 {
-				return fmt.Errorf("Could not hash (%d) endpoint %e", hash, err)
-			}
-			dm[hash] = api.L7Rules{
-				HTTP:  append(dm[hash].HTTP, rules.HTTP...),
-				Kafka: append(dm[hash].Kafka, rules.Kafka...),
+			str := ep.String()
+			dm[str] = api.L7Rules{
+				HTTP:  append(dm[str].HTTP, rules.HTTP...),
+				Kafka: append(dm[str].Kafka, rules.Kafka...),
 			}
 		}
 	} else {
@@ -95,7 +92,7 @@ func CreateL4Filter(fromEndpoints []api.EndpointSelector, rule api.PortRule, por
 		Port:           int(p),
 		Protocol:       port.Protocol,
 		L7RedirectPort: rule.RedirectPort,
-		L7RulesPerEp:   make(map[uint64]api.L7Rules),
+		L7RulesPerEp:   make(L7DataMap),
 		FromEndpoints:  fromEndpoints,
 	}
 
