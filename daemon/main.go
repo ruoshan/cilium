@@ -296,13 +296,13 @@ func init() {
 	flags.StringVar(&v6Prefix,
 		"ipv6-range", AutoCIDR, "Per-node IPv6 endpoint prefix, must be /96, e.g. fd02:1:1::/96")
 	flags.StringVar(&v4ServicePrefix,
-		"ipv4-service-range", AutoCIDR, "Kubernetes IPv4 services CIDR if not inside cluster prefix")
+		"ipv4-service-range", AutoCIDR, "k8s IPv4 services CIDR if not inside cluster prefix")
 	flags.StringVar(&v6ServicePrefix,
-		"ipv6-service-range", AutoCIDR, "Kubernetes IPv6 services CIDR if not inside cluster prefix")
+		"ipv6-service-range", AutoCIDR, "k8s IPv6 services CIDR if not inside cluster prefix")
 	flags.StringVar(&k8sAPIServer,
-		"k8s-api-server", "", "Kubernetes api address server (for https use --k8s-kubeconfig-path instead)")
+		"k8s-api-server", "", "k8s api address server (for https use --k8s-kubeconfig-path instead)")
 	flags.StringVar(&k8sKubeConfigPath,
-		"k8s-kubeconfig-path", "", "Absolute path of the kubernetes kubeconfig file")
+		"k8s-kubeconfig-path", "", "Absolute path of the k8s kubeconfig file")
 	flags.BoolVar(&config.KeepConfig,
 		"keep-config", false, "When restoring state, keeps containers' configuration in place")
 	flags.BoolVar(&config.KeepTemplates,

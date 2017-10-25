@@ -86,7 +86,7 @@ func k8sErrorHandler(e error) {
 		} else {
 			if strings.Contains(errstr, "Failed to list *v1.NetworkPolicy: the server could not find the requested resource") {
 				k8sErrMsgMU.Unlock()
-				log.Warn("Consider upgrading kubernetes to >=1.7 to enforce NetworkPolicy version 1")
+				log.Warn("Consider upgrading k8s to >=1.7 to enforce NetworkPolicy version 1")
 				stopPolicyController <- struct{}{}
 			} else if strings.Contains(errstr, "Failed to list *k8s.CiliumNetworkPolicy: the server could not find the requested resource") {
 				k8sErrMsg[errstr] = time.NewTimer(k8sErrLogTimeout)
@@ -275,7 +275,7 @@ func (d *Daemon) addK8sNetworkPolicy(obj interface{}) {
 	}
 	rules, err := k8s.ParseNetworkPolicy(k8sNP)
 	if err != nil {
-		log.WithError(err).WithField(logfields.Object, logfields.Repr(obj)).Error("Error while parsing kubernetes network policy")
+		log.WithError(err).WithField(logfields.Object, logfields.Repr(obj)).Error("Error while parsing k8s network policy")
 		return
 	}
 
@@ -286,11 +286,11 @@ func (d *Daemon) addK8sNetworkPolicy(obj interface{}) {
 
 	opts := AddOptions{Replace: true}
 	if _, err := d.PolicyAdd(rules, &opts); err != nil {
-		scopedLog.WithError(err).WithField(logfields.Object, logfields.Repr(rules)).Error("Error while adding kubernetes network policy")
+		scopedLog.WithError(err).WithField(logfields.Object, logfields.Repr(rules)).Error("Error while adding k8s network policy")
 		return
 	}
 
-	scopedLog.Info("Kubernetes network policy successfully added")
+	scopedLog.Info("k8s network policy successfully added")
 }
 
 func (d *Daemon) updateK8sNetworkPolicy(oldObj interface{}, newObj interface{}) {
@@ -316,9 +316,9 @@ func (d *Daemon) deleteK8sNetworkPolicy(obj interface{}) {
 		logfields.Labels:               logfields.Repr(labels),
 	})
 	if _, err := d.PolicyDelete(labels); err != nil {
-		scopedLog.WithError(err).Error("Error while deleting kubernetes network policy")
+		scopedLog.WithError(err).Error("Error while deleting k8s network policy")
 	} else {
-		scopedLog.Info("Kubernetes network policy successfully removed")
+		scopedLog.Info("k8s network policy successfully removed")
 	}
 }
 
@@ -331,7 +331,7 @@ func (d *Daemon) addK8sNetworkPolicyDeprecated(obj interface{}) {
 	}
 	rules, err := k8s.ParseNetworkPolicyDeprecated(k8sNP)
 	if err != nil {
-		log.WithError(err).WithField(logfields.Object, logfields.Repr(obj)).Error("Error while parsing kubernetes v1beta1 network policy")
+		log.WithError(err).WithField(logfields.Object, logfields.Repr(obj)).Error("Error while parsing k8s v1beta1 network policy")
 		return
 	}
 
@@ -339,11 +339,11 @@ func (d *Daemon) addK8sNetworkPolicyDeprecated(obj interface{}) {
 
 	opts := AddOptions{Replace: true}
 	if _, err := d.PolicyAdd(rules, &opts); err != nil {
-		scopedLog.WithField(logfields.Object, logfields.Repr(rules)).Error("Error while parsing kubernetes v1beta1 network policy")
+		scopedLog.WithField(logfields.Object, logfields.Repr(rules)).Error("Error while parsing k8s v1beta1 network policy")
 		return
 	}
 
-	scopedLog.Info("Kubernetes v1beta1 network policy successfully added")
+	scopedLog.Info("k8s v1beta1 network policy successfully added")
 }
 
 // updateK8sNetworkPolicyDeprecated FIXME remove in k8s 1.8
@@ -372,11 +372,11 @@ func (d *Daemon) deleteK8sNetworkPolicyDeprecated(obj interface{}) {
 	})
 
 	if _, err := d.PolicyDelete(labels); err != nil {
-		scopedLog.WithError(err).Error("Error while deleting v1beta1 kubernetes network policy")
+		scopedLog.WithError(err).Error("Error while deleting v1beta1 k8s network policy")
 		return
 	}
 
-	scopedLog.Info("Kubernetes v1beta1 network policy successfully removed")
+	scopedLog.Info("k8s v1beta1 network policy successfully removed")
 }
 
 func (d *Daemon) serviceAddFn(obj interface{}) {
@@ -556,7 +556,7 @@ func (d *Daemon) endpointDelFn(obj interface{}) {
 func areIPsConsistent(ipv4Enabled, isSvcIPv4 bool, svc types.K8sServiceNamespace, se *types.K8sServiceEndpoint) error {
 	if isSvcIPv4 {
 		if !ipv4Enabled {
-			return fmt.Errorf("Received an IPv4 kubernetes service but IPv4 is "+
+			return fmt.Errorf("Received an IPv4 k8s service but IPv4 is "+
 				"disabled in the cilium daemon. Ignoring service %+v", svc)
 		}
 

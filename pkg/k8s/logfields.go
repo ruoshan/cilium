@@ -28,8 +28,8 @@ const (
 	// fieldMaxRetry is the maximum number of retries
 	fieldMaxRetry = "maxRetry"
 
-	// subsysKubernetes is the value for logfields.LogSubsys
-	subsysKubernetes = "kubernetes"
+	// subsysK8s is the value for logfields.LogSubsys
+	subsysKubernetes = "k8s"
 )
 
 var (

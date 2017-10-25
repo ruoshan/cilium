@@ -42,7 +42,7 @@ func Init() error {
 
 		node := ParseNode(k8sNode)
 
-		log.WithField(logfields.NodeName, node.Name).Info("Retrieved node's information from kubernetes")
+		log.WithField(logfields.NodeName, node.Name).Info("Retrieved node's information from k8s")
 
 		if err := nodeaddress.UseNodeCIDR(node); err != nil {
 			return fmt.Errorf("unable to retrieve k8s node CIDR: %s", err)
