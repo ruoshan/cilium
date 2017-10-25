@@ -341,11 +341,10 @@ func (ds *PolicyTestSuite) TestMergeL7Policy(c *C) {
 	l7rules := api.L7Rules{
 		HTTP: []api.PortRuleHTTP{{Path: "/", Method: "GET"}},
 	}
-	hash, err := fooSelector[0].Hash()
-	c.Assert(err, IsNil)
+	str := fooSelector[0].String()
 	l7map := L7DataMap{
 		WildcardEndpointSelector: l7rules,
-		hash: l7rules,
+		str: l7rules,
 	}
 
 	expected := NewL4Policy()
@@ -411,11 +410,10 @@ func (ds *PolicyTestSuite) TestMergeL7Policy(c *C) {
 	l7rules = api.L7Rules{
 		Kafka: []api.PortRuleKafka{{Topic: "foo"}},
 	}
-	hash, err = fooSelector[0].Hash()
-	c.Assert(err, IsNil)
+	str = fooSelector[0].String()
 	l7map = L7DataMap{
 		WildcardEndpointSelector: l7rules,
-		hash: l7rules,
+		str: l7rules,
 	}
 
 	expected = NewL4Policy()
@@ -489,12 +487,11 @@ func (ds *PolicyTestSuite) TestMergeL7Policy(c *C) {
 	barRules := api.L7Rules{
 		Kafka: []api.PortRuleKafka{{Topic: "bar"}},
 	}
-	hash, err = fooSelector[0].Hash()
-	c.Assert(err, IsNil)
+	str = fooSelector[0].String()
 
 	// The l3-dependent l7 rules are not merged together.
 	l7map = L7DataMap{
-		hash: fooRules,
+		str: fooRules,
 		WildcardEndpointSelector: barRules,
 	}
 	expected = NewL4Policy()
